@@ -6,15 +6,15 @@ DB->pass = "clave_de_root"
 DB->database = "Productos"
 var con = DB.connect()
 
-{"Productos":[
-  {"var":"idProducto",      "type":"int(11)"},
-  {"var":"cbFormato",       "type":"varchar(45)"},
-  {"var":"cbData",          "type":"tinytext"},
-  {"var":"nombre",          "type":"varchar(100)"},
-  {"var":"fechaAlta",       "type":"datetime"},
-  {"var":"idUsuario",       "type":"int(11)"},
-  {"var":"idUnicoProducto", "type":"varchar(100)"}
-]} as DB.producto;
+type Productos struct {
+  id              int(11),
+  cbFormato       string(45) Only Numbers Abcedario,
+  cbData          string, //default 450
+  nombre          string(100),
+  fechaAlta       datetime,
+  idUsuario       integer (> 10, 1000 <),
+  idUnicoProducto string(100)
+];
 
 
 if(con)say "Connexion exitosa" else say "Fallo en la Connexion DB"
@@ -31,7 +31,7 @@ producto.routeGET("/producto",$idUsuario as id){
 }
 
 
-producto.routePUT("/add",$productoAdd){
+producto.PUT("/add",$productoAdd){
   $parameter = ["cbformato","cbdata","nombre","fechaalta","usuario","fotodata"] //auto crea las variables recibirlas por PUT
   $parameter.cbformato.required = TRUE  // .required Establece como dato obligatorio al recibirlo, al verificar no estar genera un error automaticamente
   $parameter.nombre.least = 7     // en los campos texto se autoverificara que cumpla con el tamaño minimo y el limite maximo
@@ -46,7 +46,7 @@ producto.routePUT("/add",$productoAdd){
 }
 
 
-producto.routeGET("/list",$idProducto as idProducto){
+producto.GET("/list",$idProducto as idProducto){
   producto.query("select ....",$resultado){
     print.json("productos",$resultado)
   }else{
